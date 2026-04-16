@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日早报 2026-04-16</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        .header .date {
+            font-size: 16px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        /* Tab 导航 */
+        .tab-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #ccc;
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .tab-btn.ai { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .tab-btn.robot { background: linear-gradient(135deg, #feca57, #ff9f43); }
+        .tab-btn.law { background: linear-gradient(135deg, #576574, #222f3e); }
+        .tab-btn.medical { background: linear-gradient(135deg, #10ac84, #1dd1a1); }
+        .tab-btn.finance { background: linear-gradient(135deg, #0abde3, #48dbfb); }
+        .tab-btn.politics { background: linear-gradient(135deg, #5f27cd, #c8d6e5); }
+        .tab-btn.culture { background: linear-gradient(135deg, #ff9ff3, #f368e0); }
+        .tab-btn.society { background: linear-gradient(135deg, #00d2d3, #01a3a4); }
+        .tab-btn.other { background: linear-gradient(135deg, #8395a7, #a4b0be); }
+
+        /* Tab 内容区 */
+        .tab-content {
+            padding: 30px 40px;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .category-header {
+            font-size: 20px;
+            font-weight: 700;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .category-header.ai { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .category-header.robot { background: linear-gradient(135deg, #feca57, #ff9f43); }
+        .category-header.law { background: linear-gradient(135deg, #576574, #222f3e); }
+        .category-header.medical { background: linear-gradient(135deg, #10ac84, #1dd1a1); }
+        .category-header.finance { background: linear-gradient(135deg, #0abde3, #48dbfb); }
+        .category-header.politics { background: linear-gradient(135deg, #5f27cd, #c8d6e5); }
+        .category-header.culture { background: linear-gradient(135deg, #ff9ff3, #f368e0); }
+        .category-header.society { background: linear-gradient(135deg, #00d2d3, #01a3a4); }
+        .category-header.other { background: linear-gradient(135deg, #8395a7, #a4b0be); }
+
+        .article {
+            padding: 18px 20px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #ddd;
+            transition: all 0.2s ease;
+        }
+        .article:hover {
+            background: #f1f3f5;
+            transform: translateX(3px);
+        }
+        .article h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .article h3 a {
+            color: #2d3436;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .article h3 a:hover {
+            color: #667eea;
+        }
+        .article .summary {
+            font-size: 14px;
+            color: #636e72;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .article .meta {
+            font-size: 12px;
+            color: #b2bec3;
+        }
+        .article .meta .source {
+            background: #dfe6e9;
+            padding: 3px 10px;
+            border-radius: 12px;
+            color: #636e72;
+        }
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9fa;
+            color: #b2bec3;
+            font-size: 13px;
+            border-top: 1px solid #eee;
+        }
+        @media (max-width: 600px) {
+            .tab-nav { padding: 15px; }
+            .tab-btn { padding: 8px 14px; font-size: 13px; }
+            .tab-content { padding: 20px; }
+            .header h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>每日早报</h1>
+            <div class="date">2026年04月16日 Thursday</div>
+        </div>
+
+        <div class="tab-nav">
+            
+            <button class="tab-btn ai active" onclick="showTab('ai')">
+                AI (1)
+            </button>
+            
+            <button class="tab-btn finance" onclick="showTab('finance')">
+                财经 (5)
+            </button>
+            
+            <button class="tab-btn society" onclick="showTab('society')">
+                社会 (1)
+            </button>
+            
+            <button class="tab-btn other" onclick="showTab('other')">
+                其他 (12)
+            </button>
+            
+        </div>
+
+        <div class="tab-content">
+            
+            <div class="tab-pane active" id="tab-ai">
+                <div class="category-header ai">AI</div>
+                
+                <div class="article">
+                    <h3><a href="https://sspai.com/post/108692" target="_blank">派早报：Keychron 推出轻量化鼠标 G3、微软推出新模型等</a></h3>
+                    
+                    <p class="summary">OpenAI 推出网络安全专用模型 GPT-5.4-Cyber、索尼宣布将调整 Bravia ...</p>
+                    
+                    <div class="meta">
+                        <span class="source">少数派</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="tab-pane" id="tab-finance">
+                <div class="category-header finance">财经</div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768897029243397?f=rss" target="_blank">国家统计局：一季度装备制造业利润对工业企业利润贡献超过50%</a></h3>
+                    
+                    <p class="summary">4月16日，国家统计局副局长毛盛勇在国新办新闻发布会上表示，从前两个月的规模以上工业企业利润的...</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768865016594947?f=rss" target="_blank">国家统计局：1—3月份全国房地产开发投资17720亿元，同比下降11.2%</a></h3>
+                    
+                    <p class="summary">36氪获悉，国家统计局发布2026年1—3月份全国房地产市场基本情况，1—3月份，</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768864006259209?f=rss" target="_blank">国家统计局：2026年1—3月份全国固定资产投资同比增长1.7%</a></h3>
+                    
+                    <p class="summary">36氪获悉，国家统计局数据显示，1—3月份，全国固定资产投资（不含农户）102708亿元，</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768858898153984?f=rss" target="_blank">一季度国内生产总值同比增长5.0%</a></h3>
+                    
+                    <p class="summary">国家统计局今天发布2026年一季度国民经济运行情况。初步核算，一季度国内生产总值334193亿元，</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768847820931591?f=rss" target="_blank">FF完成股权投资协议修订并将总认购金额增至1200万美元，取消反稀释条款</a></h3>
+                    
+                    <p class="summary">36氪获悉，4月16日，FF宣布，公司已与Gold King Arthur Holding L...</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="tab-pane" id="tab-society">
+                <div class="category-header society">社会</div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768862219403784?f=rss" target="_blank">国家统计局：2026年3月份社会消费品零售总额同比增长1.7%</a></h3>
+                    
+                    <p class="summary">36氪获悉，国家统计局数据显示，3月份，社会消费品零售总额41616亿元，同比增长1.7%。其中，</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="tab-pane" id="tab-other">
+                <div class="category-header other">其他</div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768907361190408?f=rss" target="_blank">腾讯混元3D世界模型2.0发布并开源</a></h3>
+                    
+                    <p class="summary">36氪获悉，4月16日，混元3D世界模型 2.0（HY-World 2.0）正式发布并开源。</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768900257727239?f=rss" target="_blank">国家统计局：国内市场供需改善、市场竞争秩序持续逐步优化是影响PPI上涨主导原因</a></h3>
+                    
+                    <p class="summary">4月16日，国家统计局副局长毛盛勇在国新办新闻发布会上表示，3月份，工业品出厂价格当月同比上涨0.</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768897351074306?f=rss" target="_blank">国家统计局：一季度服务零售额增速比商品销售额快3.3个百分点</a></h3>
+                    
+                    <p class="summary">4月16日，国家统计局副局长毛盛勇在国新办新闻发布会上表示，一季度服务消费较快增长。</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768891841937927?f=rss" target="_blank">沪深两市成交额突破1万亿元</a></h3>
+                    
+                    <p class="summary">36氪获悉，沪深两市成交额突破1万亿元，较上一个交易日此时缩量超1100亿元。</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768886099886600?f=rss" target="_blank">阿里巴巴世界模型ABot-PhysWorld登顶WorldArena评测榜首</a></h3>
+                    
+                    <p class="summary">36氪获悉，近日，阿里巴巴世界模型ABot-PhysWorld登顶WorldArena评测榜首。</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768882620531464?f=rss" target="_blank">辉瑞新一代减重药先维盈®开启预售，已正式上线美团买药</a></h3>
+                    
+                    <p class="summary">4月16日，辉瑞新一代GLP-1受体激动剂先维盈®（通用名：埃诺格鲁肽注射液）正式在美团买药平...</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768878811546370?f=rss" target="_blank">国家统计局：一季度全国居民人均消费支出比上年同期名义增长3.6%</a></h3>
+                    
+                    <p class="summary">36氪获悉，国家统计局数据显示，一季度，全国居民人均消费支出7955元，比上年同期名义增长3.6%，</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768876462473732?f=rss" target="_blank">算力涨价潮席卷全球：阿里、Anthropic连续调价，严重算力荒再现</a></h3>
+                    
+                    <p class="summary">算力涨价潮正在席卷全球，海内外巨头又开始了新一轮调价。阿里云四天连发三条产品涨价公告，</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768874804642562?f=rss" target="_blank">N大普微涨超400%，总市值超千亿</a></h3>
+                    
+                    <p class="summary">36氪获悉，N大普微盘中涨超400%，总市值突破1000亿。</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768862799201028?f=rss" target="_blank">国家统计局：3月份规模以上工业增加值增长5.7%</a></h3>
+                    
+                    <p class="summary">36氪获悉，国家统计局数据显示，3月份，规模以上工业增加值同比实际增长5.</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768841036808711?f=rss" target="_blank">创业板指涨1%</a></h3>
+                    
+                    <p class="summary">36氪获悉，A股三大股指高开高走，创业板指涨1%，深证成指涨0.69%，沪指涨0.3%，钛白粉概念、</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+                <div class="article">
+                    <h3><a href="https://36kr.com/newsflashes/3768840720155136?f=rss" target="_blank">恒生科技指数日内涨超2%，宁德时代涨9%</a></h3>
+                    
+                    <p class="summary">36氪获悉，恒生科技指数日内涨超2%，恒指涨1%，宁德时代涨9%，消息面上，</p>
+                    
+                    <div class="meta">
+                        <span class="source">36氪</span>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+
+        <div class="footer">
+            由每日早报系统自动生成 · 2026-04-16 10:54:19
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // 隐藏所有 tab
+            document.querySelectorAll('.tab-pane').forEach(function(pane) {
+                pane.classList.remove('active');
+            });
+            // 移除所有按钮 active 状态
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            // 显示选中的 tab
+            document.getElementById('tab-' + tabId).classList.add('active');
+            // 激活对应按钮
+            document.querySelector('.tab-btn.' + tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
